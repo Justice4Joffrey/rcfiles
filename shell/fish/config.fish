@@ -8,6 +8,7 @@ abbr -a gc 'git checkout'
 abbr -a ga 'git add -p'
 abbr -a vimdiff 'nvim -d'
 abbr -a ct 'cargo t'
+abbr -a cm 'cargo make'
 abbr -a amz 'env AWS_SECRET_ACCESS_KEY=(pass www/aws-secret-key | head -n1)'
 abbr -a ais "aws ec2 describe-instances | jq '.Reservations[] | .Instances[] | {iid: .InstanceId, type: .InstanceType, key:.KeyName, state:.State.Name, host:.PublicDnsName}'"
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
@@ -165,6 +166,9 @@ setenv FZF_DEFAULT_COMMAND 'fd --type file --follow'
 setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
 setenv FZF_DEFAULT_OPTS '--height 20%'
 
+# TODO: pull this out in to an env.fish file
+setenv GG_DEPLOYMENT_REPO $HOME'/projects/gg_deployment'
+
 abbr -a nova 'env OS_PASSWORD=(pass www/mit-openstack | head -n1) nova'
 abbr -a glance 'env OS_PASSWORD=(pass www/mit-openstack | head -n1) glance'
 setenv OS_USERNAME jfrg@csail.mit.edu
@@ -245,7 +249,7 @@ function fish_greeting
 				-e 's/\/.*//'| \
 			awk 'BEGIN {i=""} /\.|:/ {print i" "$0"\\\n"; next} // {i = $0}' | \
 			sort | \
-			column -t -R1 | \
+			column -t | \
 			# public addresses are underlined for visibility \
 			sed 's/ \([^ ]\+\)$/ \\\e[4m\1/' | \
 			# private addresses are not \
@@ -296,9 +300,9 @@ function fish_greeting
 
 	echo
 
-	if test -s ~/todo
+	if test -s ~/todos.txt
 		set_color magenta
-		cat todo | sed 's/^/ /'
+		cat todos.txt | sed 's/^/ /'
 		echo
 	end
 
